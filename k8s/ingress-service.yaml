@@ -10,7 +10,7 @@ spec:
     - host: ts-fileupload.io
       http:
         paths:
-          - path: /fileupload/?(.*)
+          - path: /auth/?(.*)
             pathType: Prefix
             backend:
               service:
