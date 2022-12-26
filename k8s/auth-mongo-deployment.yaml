@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-mongo-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth-mongo
+  template:
+    metadata:
+      labels:
+        app: auth-mongo
+    spec:
+      volumes:
+        - name: ts-fileupload-auth-mongo-storage
+          persistentVolumeClaim:
+            claimName: ts-fileupload-database-pvc
+      containers:
+        - name: auth-mongo
+          image: mongo
+          volumeMounts:
+            - mountPath: /data/db
+              name: ts-fileupload-auth-mongo-storage
+        
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-mongo-service
+spec:
+  selector:
+    app: auth-mongo
+  ports:
+    - name: db
+      protocol: TCP
+      port: 27017
+      targetPort: 27017
