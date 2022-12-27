@@ -5,6 +5,7 @@ import {
   getCallback,
   logout,
   currentUser,
+  getUsers,
 } from '../controllers/auth-controllers';
 
 const router = Router();
@@ -16,5 +17,7 @@ router.get(
 router.get('/google/callback', passport.authenticate('google'), getCallback);
 router.get('/logout', logout);
 router.get('/current-user', currentUser);
+//TODO: Auth Middleware
+router.get('/users', getUsers);
 
 export { router as authRouter };
