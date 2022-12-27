@@ -2,20 +2,20 @@ import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { User } from '../models/User';
 
-passport.serializeUser((user, done) => {
-  done(null, user);
+passport.serializeUser<any, any>((req, user, done) => {
+  done(undefined, user);
 });
 
 passport.deserializeUser((id, done) => {
   User.findById(id).then((user) => {
-    done(null, user);
+    done(undefined, user);
   });
 });
 
 passport.use(
   new GoogleStrategy(
     {
-      callbackURL: '/auth/google/callback',
+      callbackURL: 'http://ts-fileupload.io/auth/google/callback',
       clientID: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
       proxy: true,
@@ -24,11 +24,11 @@ passport.use(
       try {
         const existingUser = await User.findOne({ googleId: profile.id });
         if (existingUser) {
-          return done(null, existingUser);
+          return done(undefined, existingUser);
         }
         const user = await new User({
           googleId: profile.id,
-          displayName: profile.displayName,
+          username: profile.displayName,
         }).save();
         done(null, user);
       } catch (err) {
