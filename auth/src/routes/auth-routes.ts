@@ -1,6 +1,7 @@
 import passport from 'passport';
 import { Router } from 'express';
 
+import checkAuth from '../middlewares/checkAuth';
 import {
   getCallback,
   logout,
@@ -18,6 +19,6 @@ router.get('/google/callback', passport.authenticate('google'), getCallback);
 router.get('/logout', logout);
 router.get('/current-user', currentUser);
 //TODO: Auth Middleware
-router.get('/users', getUsers);
+router.get('/users', checkAuth, getUsers);
 
 export { router as authRouter };

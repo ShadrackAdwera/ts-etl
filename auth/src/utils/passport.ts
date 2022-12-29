@@ -1,14 +1,14 @@
 import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
-import { User } from '../models/User';
+import { User, UserDoc } from '../models/User';
 
-passport.serializeUser<any, any>((req, user, done) => {
+passport.serializeUser((user: any, done) => {
   done(undefined, user);
 });
 
 passport.deserializeUser((id, done) => {
-  User.findById(id).then((user) => {
-    done(undefined, user);
+  User.findById(id, (err: NativeError, user: UserDoc) => {
+    done(err, user);
   });
 });
 
@@ -28,7 +28,6 @@ passport.use(
         }
         const user = await new User({
           googleId: profile.id,
-
           username: profile.displayName,
         }).save();
         done(null, user);

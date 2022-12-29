@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from 'express';
 import { User, UserDoc } from '../models/User';
 
 const getCallback = (req: Request, res: Response, next: NextFunction) => {
-  return res.redirect('http://localhost:3000');
+  return res.redirect('/auth/users');
 };
 
 const logout = (req: Request, res: Response, next: NextFunction) => {
@@ -22,7 +22,7 @@ const currentUser = (req: Request, res: Response, next: NextFunction) => {
 
 const getUsers = async (req: Request, res: Response, next: NextFunction) => {
   let foundUsers: { _id: string & UserDoc }[];
-
+  console.log(req.user);
   try {
     foundUsers = await User.find({});
   } catch (error) {

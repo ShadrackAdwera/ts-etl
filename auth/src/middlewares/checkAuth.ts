@@ -1,8 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
 
-module.exports = (req: Request, res: Response, next: NextFunction) => {
-  if (!req.user) {
+const checkAuth = (req: Request, res: Response, next: NextFunction) => {
+  if (!req.isAuthenticated()) {
     return res.status(401).send({ error: 'You must log in!' });
   }
   next();
 };
+
+export default checkAuth;
