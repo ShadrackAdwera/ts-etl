@@ -5,10 +5,14 @@ export interface EtlDoc extends Document {
   docUrl: string;
 }
 
-const etlDoc = new Schema<EtlDoc>(
+const etlSchema = new Schema<EtlDoc>(
   {
     createdBy: { type: String, required: true },
     docUrl: { type: String, required: true },
   },
   { timestamps: true, toJSON: { getters: true } }
 );
+
+const Etl = model<EtlDoc>('etl', etlSchema);
+
+export { Etl };
