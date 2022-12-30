@@ -5,10 +5,13 @@ export interface UserDoc extends Document {
   username: string;
 }
 
-const userSchema = new Schema<UserDoc>({
-  googleId: { type: String, required: true },
-  username: { type: String, required: true },
-});
+const userSchema = new Schema<UserDoc>(
+  {
+    googleId: { type: String, required: true },
+    username: { type: String, required: true },
+  },
+  { timestamps: true, toJSON: { getters: true } }
+);
 
 const User = model<UserDoc>('user', userSchema);
 
