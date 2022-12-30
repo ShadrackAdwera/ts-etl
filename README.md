@@ -22,7 +22,8 @@
 
      - Extract, Transform & Load the data from the CSV file to a message broker (NATS).
      - This message broker emits an event which is subscribed to by the **data service**.
-     - Optionally save this CSV to Amazon S3 and save the link alongside the user who created it inside a MongoDB database.
+     - Request a pre signed URL from S3
+     - Upload this CSV to Amazon S3 using the pre signed URL and save the link alongside the user who created it inside MongoDB.
 
   3. **_Data Service_**
 
