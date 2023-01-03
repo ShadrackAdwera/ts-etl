@@ -1,9 +1,23 @@
-import { HttpError } from '@adwesh/common';
+import { HttpError, natsWraper } from '@adwesh/common';
 import { Request, Response, NextFunction } from 'express';
 import { Types } from 'mongoose';
-import { parse } from 'csv-parse';
+import { CsvUploadedPublisher } from '../events/CsvUploadedPublisher';
 
 import { Etl, EtlDoc } from '../models/Etl';
+import { CsvFileReader } from '../utils/CsvReader';
+
+interface IExpressFile {
+  name: string;
+  mv(path: string, callback: (err: any) => void): void;
+  mv(path: string): Promise<void>;
+  encoding: string;
+  mimetype: string;
+  data: Buffer;
+  tempFilePath: string;
+  truncated: boolean;
+  size: number;
+  md5: string;
+}
 
 const getUploadedDocs = async (
   req: Request,
@@ -38,23 +52,46 @@ const publishDataFromUploadedDoc = async (
    * Save the file in s3 using the pre-signed URL
    * Save the url alongside the id of the creator in MongoDB
    */
-  const csvData: string[][] = [];
-  if (!req.files || Object.keys(req.files).length === 0)
-    return next(new HttpError('Please provide a file', 404));
-  //@ts-ignore
-  const parser = await parse(req.files.file.data, {
-    trim: true,
-    skip_empty_lines: true,
-    delimiter: ':',
-  });
-  parser.on('readable', function () {
-    //
-  });
+  // Get document from request body
+  if (!req.files || Object.keys(req.files).length === 0) {
+    return res.status(400).json({ message: 'No files were uploaded.' });
+  }
+  const uploadedFile = req.files.file as IExpressFile;
 
-  /**
-   * fileName : req.files.file.name
-   * fileContent : req.files.file.data : buffer representation of the file
-   */
+  // scope to csv only
+  if (uploadedFile.mimetype !== 'text/csv') {
+    return res.status(200).json({ message: 'Uplaod a CSV file' });
+  }
+
+  // extract data from document body
+  const csvReader = new CsvFileReader(uploadedFile.data.toString('utf-8'));
+  const records = csvReader.read();
+
+  // possible refactor? publish as a string -
+
+  // publish data extracted to data service - behind the scenes? Possible refactor.
+  for (const record of records) {
+    const {
+      awayScored,
+      awayTeam,
+      homeScored,
+      homeTeam,
+      matchDay,
+      ref,
+      winner,
+    } = record;
+    await new CsvUploadedPublisher(natsWraper.client).publish({
+      awayScored,
+      awayTeam,
+      homeScored,
+      homeTeam,
+      matchDay,
+      ref,
+      winner,
+    });
+  }
+
+  res.status(200).json({ message: 'Data has been uploaded' });
 };
 
 export { getUploadedDocs, publishDataFromUploadedDoc };
