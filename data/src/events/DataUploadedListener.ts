@@ -26,6 +26,5 @@ export class DataUploadedListener extends Listener<CsvUploadedEvent> {
     const { homeTeam, awayTeam, homeScored, awayScored } = data;
     console.log(`${homeTeam} ${homeScored} - ${awayTeam} ${awayScored}`);
     msg.ack();
-    throw new Error('Method not implemented.');
   }
 }
