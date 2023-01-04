@@ -17,3 +17,17 @@ spec:
                 name: auth-service
                 port:
                   number: 5000
+          - path: /etl/?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: etl-service
+                port:
+                  number: 5001
+          - path: /data/?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: data-service
+                port:
+                  number: 5002
