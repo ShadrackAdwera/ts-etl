@@ -8,7 +8,7 @@ const app = express();
 app.use(express.json());
 app.use(fileUpload());
 
-app.use('/api/elt', EtlRouter);
+app.use('/etl', EtlRouter);
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   throw new HttpError('Invalid method / Route', 404);
