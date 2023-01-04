@@ -65,7 +65,9 @@ const publishDataFromUploadedDoc = async (
 
   // extract data from document body
   const csvReader = new CsvFileReader(uploadedFile.data.toString('utf-8'));
-  const records = csvReader.read();
+  const records = csvReader
+    .read()
+    .filter((r) => r.homeTeam !== undefined && r.homeScored !== null);
 
   // possible refactor? publish as a string -
 
