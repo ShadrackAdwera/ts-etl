@@ -12,16 +12,9 @@ spec:
       labels:
         app: data-mongo
     spec:
-      volumes:
-        - name: ts-fileupload-data-mongo-storage
-          persistentVolumeClaim:
-            claimName: ts-fileupload-database-pvc
       containers:
         - name: data-mongo
           image: mongo
-          volumeMounts:
-            - mountPath: /data/db
-              name: ts-fileupload-data-mongo-storage
         
 ---
 apiVersion: v1
