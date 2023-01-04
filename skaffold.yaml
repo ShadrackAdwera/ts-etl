@@ -16,3 +16,19 @@ build:
         manual:
           - dest: .
             src: 'src/**/*.ts'
+    - image: adwera/ts-fileupload-etl
+      context: etl
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - dest: .
+            src: 'src/**/*.ts'
+    - image: adwera/ts-fileupload-data
+      context: data
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - dest: .
+            src: 'src/**/*.ts'
