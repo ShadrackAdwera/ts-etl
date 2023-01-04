@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: etl-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: etl
+  template:
+    metadata:
+      labels:
+        app: etl
+    spec:
+      containers:
+        - name: etl
+          image: adwera/ts-fileupload-etl
+          env:
+            - name: MONGO_URI
+              value: 'mongodb://etl-mongo-service:27017/etl'
+            - name: NATS_CLUSTER_ID
+              value: 'ts-fileupload'
+            - name: NATS_CLIENT_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NATS_URI
+              value: 'http://nats-service:4222'
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: etl-service
+spec:
+  selector:
+    app: etl
+  ports:
+    - name: etl
+      protocol: TCP
+      port: 5001
+      targetPort: 5001
+
+
