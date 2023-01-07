@@ -1,5 +1,6 @@
 import { HttpError, natsWraper } from '@adwesh/common';
 import { Request, Response, NextFunction } from 'express';
+import { validationResult } from 'express-validator';
 import { Types } from 'mongoose';
 import { CsvUploadedPublisher } from '../events/CsvUploadedPublisher';
 
@@ -53,6 +54,14 @@ const publishDataFromUploadedDoc = async (
    * Save the url alongside the id of the creator in MongoDB
    */
   // Get document from request body
+
+  const error = validationResult(req);
+
+  if (!error.isEmpty())
+    return next(new HttpError('Provide the season for this file', 400));
+
+  const { season } = req.body;
+
   if (!req.files || Object.keys(req.files).length === 0) {
     return res.status(400).json({ message: 'No files were uploaded.' });
   }
@@ -90,6 +99,7 @@ const publishDataFromUploadedDoc = async (
       matchDay,
       ref,
       winner,
+      season,
     });
   }
 
