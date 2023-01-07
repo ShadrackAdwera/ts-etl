@@ -16,8 +16,6 @@ spec:
         - name: data
           image: adwera/ts-fileupload-data
           env:
-            - name: MONGO_URI
-              value: 'mongodb://data-mongo-service:27017/data'
             - name: NATS_CLUSTER_ID
               value: 'ts-fileupload'
             - name: NATS_CLIENT_ID
@@ -26,6 +24,17 @@ spec:
                   fieldPath: metadata.name
             - name: NATS_URI
               value: 'http://nats-service:4222'
+            - name: PGDATABASE
+              value: postgres
+            - name: PGUSER
+              value: postgres
+            - name: PGHOST
+              value: postgres-cluster-ip-service
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pgpassword
+                  key: POSTGRES_PASSWORD
 
 ---
 
