@@ -23,7 +23,7 @@
      - Extract, Transform & Load the data from the CSV file to a message broker (NATS).
      - This message broker emits an event which is subscribed to by the **data service**.
      - Request a pre signed URL from S3
-     - Upload this CSV to Amazon S3 using the pre signed URL and save the link alongside the user who created it inside MongoDB.
+     - Upload this CSV to Amazon S3 using the pre signed URL and save the link alongside the user who created it inside **MongoDB**.
 
   3. **_Data Service_**
 
@@ -31,8 +31,8 @@
      - CRUD Operations enabled on the data found in this service.
      - Versioning?
      - Data saved through exiting 'Grid View' by the client service should also be patched into the DB.
-     - Fetch aggregated data to populate in the client side dashboard.
-     - **Cache Layer** should be enabled on data from this service.
+     - Fetch aggregated data, created via **Materialized Views** to populate in the client side dashboard.
+     - **Redis Cache** for GET requests data from this service.
 
   4. **_Client Service_**
 
