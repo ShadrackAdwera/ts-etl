@@ -5,12 +5,14 @@ import {
   getUploadedDocs,
   publishDataFromUploadedDoc,
 } from '../controllers/etl-controllers';
+import { checkAuth } from '../middlewares/checkAuth';
 
 const router = Router();
 
-router.get('', getUploadedDocs);
+router.get('', checkAuth, getUploadedDocs);
 router.post(
   '',
+  checkAuth,
   [body('season').trim().not().isEmpty()],
   publishDataFromUploadedDoc
 );
