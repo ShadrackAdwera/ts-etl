@@ -26,6 +26,8 @@ spec:
                   fieldPath: metadata.name
             - name: NATS_URI
               value: 'http://nats-service:4222'
+            - name: REDIS_HOST
+              value: 'auth-redis-service'
             - name: COOKIE_KEY
               valueFrom:
                 secretKeyRef:
@@ -40,7 +42,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: google-client-secret
-                  key: GOOGLE_CLIENT_SECRET 
+                  key: GOOGLE_CLIENT_SECRET  
 
 ---
 
