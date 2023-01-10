@@ -10,7 +10,7 @@ enum PossibleOutcomes {
 }
 
 export class DataUploadedListener extends Listener<CsvUploadedEvent> {
-  subject: Subjects = Subjects.CsvUploaded;
+  subject: Subjects.CsvUploaded = Subjects.CsvUploaded;
   queueGroupName: string = 'DATA_QUEUE-GROUP';
   async onMessage(
     data: {
@@ -46,6 +46,7 @@ export class DataUploadedListener extends Listener<CsvUploadedEvent> {
         winner,
         season: Number(season),
       });
+      msg.ack();
     } catch (error) {}
     msg.ack();
   }
