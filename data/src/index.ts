@@ -1,8 +1,9 @@
 import { pgPool } from './helpers/pool';
 
 import { app } from './app';
-import { natsWraper } from '@adwesh/common';
+import { initRedis, natsWraper } from '@adwesh/common';
 import { DataUploadedListener } from './events/DataUploadedListener';
+import { AuthSuccessfulListener } from './events/AuthSuccessfulListener';
 
 if (!process.env.PGDATABASE) {
   throw new Error('Database name must be defined');
@@ -15,6 +16,10 @@ if (!process.env.PGUSER) {
 }
 if (!process.env.PGHOST) {
   throw new Error('Database host must be defined');
+}
+
+if (!process.env.REDIS_HOST) {
+  throw new Error('REDIS HOST is not defined!');
 }
 
 if (!process.env.NATS_CLUSTER_ID) {
@@ -65,11 +70,13 @@ const start = async () => {
       process.exit();
     });
 
+    await new AuthSuccessfulListener(natsWraper.client).listen();
+
     process.on('SIGINT', () => natsWraper.client.close());
     process.on('SIGTERM', () => natsWraper.client.close());
 
     new DataUploadedListener(natsWraper.client).listen();
-
+    await initRedis.connect(process.env.REDIS_HOST!);
     app.listen(5002);
     console.log('Connected to Data Service, listening on PORT: 5002');
   } catch (error) {

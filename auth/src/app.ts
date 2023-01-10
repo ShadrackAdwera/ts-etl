@@ -7,6 +7,7 @@ import './utils/passport';
 import { authRouter } from './routes/auth-routes';
 import { HttpError } from '@adwesh/common';
 
+export const COOKIE_MAX_AGE = 30 * 24 * 60 * 60 * 1000;
 const app = express();
 
 app.use(express.json());
@@ -31,7 +32,7 @@ const sess: SessionOptions = {
   saveUninitialized: false,
   cookie: {
     secure: app.get('env') === 'production',
-    maxAge: 30 * 24 * 60 * 60 * 1000,
+    maxAge: COOKIE_MAX_AGE,
   },
   store: new MongoStore({
     collectionName: 'session',
