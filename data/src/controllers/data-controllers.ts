@@ -100,7 +100,7 @@ const updateMatch = async (req: Request, res: Response, next: NextFunction) => {
   res.status(200).json({ message: 'Update successful', data: response });
 };
 
-const deleteData = async (req: Request, res: Response, next: NextFunction) => {
+const deleteMatch = async (req: Request, res: Response, next: NextFunction) => {
   const matchId = req.params.id;
 
   let removedRow: { id: number };
@@ -122,4 +122,4 @@ const deleteData = async (req: Request, res: Response, next: NextFunction) => {
     .json({ message: `The row with ID: ${removedRow.id} has been deleted.` });
 };
 
-export { fetchMatches };
+export { fetchMatches, addMatch, updateMatch, deleteMatch };
