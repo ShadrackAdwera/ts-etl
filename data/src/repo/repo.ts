@@ -41,4 +41,41 @@ export class DataRepo {
     );
     return Number(rows[0].count);
   }
+
+  static async updateRow(id: number, updatedData: StatType): Promise<StatType> {
+    const {
+      awayScored,
+      awayTeam,
+      homeScored,
+      homeTeam,
+      matchDay,
+      ref,
+      season,
+      winner,
+    } = updatedData;
+    const { rows } = await pgPool.query<StatType>(
+      `UPDATE data SET awayScored,
+    homeScored = $1, 
+    homeTeam = $2, 
+    awayTeam = $3, 
+    matchDay = $4, 
+    referee = $5, 
+    winner = $6, 
+    season = $7 
+    WHERE id = $8
+     RETURNING *`,
+      [
+        awayScored,
+        awayTeam,
+        homeScored,
+        homeTeam,
+        matchDay,
+        ref,
+        season,
+        winner,
+        id,
+      ]
+    );
+    return rows[0];
+  }
 }
