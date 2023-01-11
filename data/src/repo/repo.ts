@@ -78,4 +78,12 @@ export class DataRepo {
     );
     return rows[0];
   }
+
+  static async deleteRow(id: number): Promise<{ id: number }> {
+    const { rows } = await pgPool.query(
+      `DELETE FROM data WHERE id = $1 RETURNING id`,
+      [id]
+    );
+    return rows[0];
+  }
 }
